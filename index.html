@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura Salón — Tu espacio de belleza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gray:    #f0f0f0;
+      --dark:    #0a0a0a;
+      --mid:     #444444;
+      --muted:   #888888;
+      --white:   #ffffff;
+      --serif:   'Cormorant Garamond', Georgia, serif;
+      --sans:    'Jost', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--dark);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 5%;
+      transition: background .35s, box-shadow .35s;
+    }
+    nav.scrolled {
+      background: rgba(255,255,255,.97);
+      box-shadow: 0 1px 20px rgba(0,0,0,.08);
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      font-weight: 400;
+      letter-spacing: .12em;
+      color: var(--white);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    nav.scrolled .nav-logo { color: var(--dark); }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,.8);
+      text-decoration: none;
+      font-size: .82rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+    nav.scrolled .nav-links a { color: var(--mid); }
+    .nav-links a:hover { color: var(--white); }
+    nav.scrolled .nav-links a:hover { color: var(--dark); }
+    .nav-cta {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.6);
+      color: var(--white) !important;
+      padding: .45rem 1.2rem;
+      border-radius: 2px;
+      transition: background .3s, border-color .3s, color .3s !important;
+    }
+    .nav-cta:hover { background: var(--white); border-color: var(--white); color: var(--dark) !important; }
+    nav.scrolled .nav-cta { border-color: var(--dark); color: var(--dark) !important; }
+    nav.scrolled .nav-cta:hover { background: var(--dark); border-color: var(--dark); color: var(--white) !important; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-hamburger span { width: 24px; height: 1.5px; background: var(--white); transition: background .3s; }
+    nav.scrolled .nav-hamburger span { background: var(--dark); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      background: var(--dark);
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 40%, #111111 70%, #000000 100%);
+    }
+    .hero-pattern {
+      position: absolute; inset: 0; opacity: .06;
+      background-image: repeating-linear-gradient(
+        45deg,
+        #ffffff 0,
+        #ffffff 1px,
+        transparent 0,
+        transparent 50%
+      );
+      background-size: 30px 30px;
+    }
+    .hero-glow {
+      position: absolute; top: 30%; left: 50%; transform: translate(-50%,-50%);
+      width: 60vw; height: 60vw; max-width: 700px; max-height: 700px;
+      background: radial-gradient(circle, rgba(255,255,255,.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 0 5%;
+      max-width: 820px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 1.6rem;
+      opacity: 0;
+      animation: fadeUp .8s .2s forwards;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: .04em;
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp .9s .4s forwards;
+    }
+    .hero-title em { font-style: italic; color: rgba(255,255,255,.7); }
+    .hero-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,.5);
+      letter-spacing: .04em;
+      max-width: 480px;
+      margin: 0 auto 2.8rem;
+      opacity: 0;
+      animation: fadeUp .9s .6s forwards;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp .9s .8s forwards;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--white);
+      color: var(--dark);
+      text-decoration: none;
+      padding: .85rem 2.4rem;
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background .3s, color .3s, transform .2s;
+    }
+    .btn-primary:hover { background: var(--gray); transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,.35);
+      color: var(--white);
+      text-decoration: none;
+      padding: .85rem 2.4rem;
+      font-size: .8rem;
+      font-weight: 400;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: border-color .3s, background .3s, color .3s, transform .2s;
+    }
+    .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,.08); transform: translateY(-2px); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: rgba(255,255,255,.3);
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp .8s 1.2s forwards;
+    }
+    .hero-scroll-line {
+      width: 1px; height: 50px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.5), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── STRIP ── */
+    .strip {
+      background: var(--dark);
+      border-top: 1px solid #1f1f1f;
+      padding: .9rem 5%;
+      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+    }
+    .strip-item {
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+    }
+
+    /* ── SECTION WRAPPER ── */
+    section { padding: 7rem 5%; }
+    .section-label {
+      font-size: .7rem;
+      font-weight: 500;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex; align-items: center; gap: .8rem;
+      margin-bottom: 1rem;
+    }
+    .section-label::before { content: ''; width: 30px; height: 1px; background: var(--dark); }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 300;
+      color: var(--dark);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-title em { font-style: italic; color: var(--dark); font-weight: 400; }
+    .section-body { color: var(--muted); max-width: 520px; line-height: 1.8; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--white); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .about-visual { position: relative; }
+    .about-img-main {
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: linear-gradient(160deg, #111111, #222222);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .about-img-main::after {
+      content: 'AURA';
+      font-family: var(--serif);
+      font-size: 5rem;
+      font-weight: 300;
+      color: rgba(255,255,255,.07);
+      letter-spacing: .3em;
+    }
+    .about-img-accent {
+      position: absolute; bottom: -2rem; right: -2rem;
+      width: 55%;
+      aspect-ratio: 1;
+      background: var(--dark);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      gap: .3rem;
+    }
+    .about-stat { font-family: var(--serif); font-size: 2.8rem; color: var(--white); font-weight: 400; line-height: 1; }
+    .about-stat-label { font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.45); }
+    .about-text { padding-left: 1rem; }
+    .about-values {
+      display: flex; flex-direction: column; gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .about-value { display: flex; align-items: flex-start; gap: 1rem; }
+    .about-value-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .85rem; color: var(--dark);
+      margin-top: .1rem;
+    }
+    .about-value-name { font-weight: 500; font-size: .88rem; margin-bottom: .15rem; }
+    .about-value-desc { font-size: .82rem; color: var(--muted); }
+
+    /* ── SERVICES ── */
+    #services { background: var(--gray); }
+    .services-header {
+      text-align: center;
+      max-width: 600px; margin: 0 auto 4rem;
+    }
+    .services-header .section-label { justify-content: center; }
+    .services-header .section-label::before { display: none; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .service-card {
+      background: var(--white);
+      padding: 2.8rem 2.2rem;
+      position: relative; overflow: hidden;
+      transition: transform .3s;
+      cursor: default;
+    }
+    .service-card::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--dark);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s;
+    }
+    .service-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+    .service-card:hover::after { transform: scaleX(1); }
+    .service-icon { font-size: 1.8rem; margin-bottom: 1.4rem; display: block; }
+    .service-name {
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      font-weight: 400;
+      margin-bottom: .6rem;
+      color: var(--dark);
+    }
+    .service-desc {
+      font-size: .82rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+    .service-items {
+      list-style: none;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .service-items li {
+      font-size: .78rem;
+      color: var(--mid);
+      display: flex; align-items: center; gap: .5rem;
+    }
+    .service-items li::before { content: '—'; color: var(--dark); flex-shrink: 0; }
+
+    /* ── EXPERIENCE ── */
+    #experience {
+      background: var(--dark);
+      padding: 7rem 5%;
+    }
+    .experience-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 6rem; align-items: center;
+    }
+    .experience-inner .section-title { color: var(--white); }
+    .experience-inner .section-title em { color: rgba(255,255,255,.65); }
+    .experience-inner .section-body { color: rgba(255,255,255,.45); }
+    .experience-inner .section-label { color: rgba(255,255,255,.35); }
+    .experience-inner .section-label::before { background: rgba(255,255,255,.25); }
+    .exp-features { display: flex; flex-direction: column; gap: 2rem; margin-top: 2.5rem; }
+    .exp-feature { display: flex; gap: 1.4rem; align-items: flex-start; }
+    .exp-num {
+      font-family: var(--serif);
+      font-size: 2rem;
+      color: rgba(255,255,255,.2);
+      line-height: 1;
+      flex-shrink: 0;
+      width: 3rem;
+    }
+    .exp-feature-title { font-weight: 500; font-size: .9rem; color: var(--white); margin-bottom: .3rem; }
+    .exp-feature-desc { font-size: .82rem; color: rgba(255,255,255,.4); line-height: 1.7; }
+    .exp-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .exp-block {
+      aspect-ratio: 1;
+      border-radius: 3px;
+      display: flex; align-items: flex-end;
+      padding: 1.2rem;
+      position: relative; overflow: hidden;
+    }
+    .exp-block:nth-child(1) { background: #161616; grid-column: 1 / 3; aspect-ratio: 2/1; border: 1px solid #222; }
+    .exp-block:nth-child(2) { background: var(--white); }
+    .exp-block:nth-child(3) { background: #1a1a1a; border: 1px solid #222; }
+    .exp-block-label {
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      font-weight: 400;
+    }
+    .exp-block:nth-child(2) .exp-block-label { color: rgba(0,0,0,.4); }
+
+    /* ── GALLERY ── */
+    #gallery { background: var(--white); padding: 7rem 5%; }
+    .gallery-header { text-align: center; max-width: 500px; margin: 0 auto 3.5rem; }
+    .gallery-header .section-label { justify-content: center; }
+    .gallery-header .section-label::before { display: none; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(2, 220px);
+      gap: 8px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .gallery-item {
+      background: var(--gray);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+      transition: transform .3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); z-index: 2; }
+    .gallery-item:nth-child(1) { grid-column: 1 / 3; }
+    .gallery-item:nth-child(2) { grid-column: 3 / 5; }
+    .gallery-item:nth-child(3) { grid-column: 5 / 7; }
+    .gallery-item:nth-child(4) { grid-column: 1 / 2; }
+    .gallery-item:nth-child(5) { grid-column: 2 / 5; }
+    .gallery-item:nth-child(6) { grid-column: 5 / 7; }
+    .gallery-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: .4rem;
+    }
+    .gallery-placeholder svg { opacity: .25; }
+    .gallery-placeholder span { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+    .gallery-item:nth-child(1) .gallery-placeholder { background: #e8e8e8; }
+    .gallery-item:nth-child(2) .gallery-placeholder { background: #f0f0f0; }
+    .gallery-item:nth-child(3) .gallery-placeholder { background: #e0e0e0; }
+    .gallery-item:nth-child(4) .gallery-placeholder { background: #f5f5f5; }
+    .gallery-item:nth-child(5) .gallery-placeholder { background: #111111; }
+    .gallery-item:nth-child(6) .gallery-placeholder { background: #e8e8e8; }
+    .gallery-item:nth-child(5) .gallery-placeholder svg { stroke: rgba(255,255,255,.25); }
+    .gallery-item:nth-child(5) .gallery-placeholder span { color: rgba(255,255,255,.3); }
+    .gallery-ig { text-align: center; margin-top: 2.5rem; }
+    .gallery-ig a {
+      display: inline-flex; align-items: center; gap: .5rem;
+      color: var(--mid); text-decoration: none;
+      font-size: .82rem; letter-spacing: .1em;
+      border-bottom: 1px solid var(--dark);
+      padding-bottom: 2px;
+      transition: color .3s, border-color .3s;
+    }
+    .gallery-ig a:hover { color: var(--dark); }
+
+    /* ── BOOKING ── */
+    #booking { background: var(--gray); text-align: center; }
+    .booking-inner { max-width: 640px; margin: 0 auto; }
+    .booking-inner .section-label { justify-content: center; }
+    .booking-inner .section-label::before { display: none; }
+    .booking-inner .section-body { margin: 0 auto 2.5rem; }
+    .booking-form {
+      display: flex; gap: 1rem;
+      background: var(--white);
+      border: 1px solid #e0e0e0;
+      border-radius: 3px;
+      padding: .5rem .5rem .5rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
+      margin-bottom: 1rem;
+    }
+    .booking-form input {
+      flex: 1; border: none; outline: none;
+      font-family: var(--sans); font-size: .88rem;
+      color: var(--dark); background: transparent;
+    }
+    .booking-form input::placeholder { color: #aaa; }
+    .booking-form button {
+      background: var(--dark);
+      color: var(--white);
+      border: none; cursor: pointer;
+      padding: .8rem 2rem;
+      font-family: var(--sans);
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background .3s;
+    }
+    .booking-form button:hover { background: #333; }
+    .booking-note { font-size: .75rem; color: var(--muted); }
+    .booking-or {
+      display: flex; align-items: center; gap: 1rem;
+      color: var(--muted); font-size: .78rem;
+      margin: 1.8rem 0;
+    }
+    .booking-or::before, .booking-or::after { content: ''; flex: 1; height: 1px; background: #ddd; }
+    .booking-channels { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .booking-channel {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .7rem 1.4rem;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      text-decoration: none;
+      color: var(--mid);
+      font-size: .8rem;
+      letter-spacing: .05em;
+      transition: border-color .3s, color .3s, background .3s;
+    }
+    .booking-channel:hover { border-color: var(--dark); color: var(--dark); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--dark); }
+    .contact-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+    }
+    .contact-inner .section-title { color: var(--white); }
+    .contact-inner .section-title em { color: rgba(255,255,255,.6); }
+    .contact-inner .section-body { color: rgba(255,255,255,.4); margin-bottom: 2.5rem; }
+    .contact-inner .section-label { color: rgba(255,255,255,.3); }
+    .contact-inner .section-label::before { background: rgba(255,255,255,.2); }
+    .contact-details { display: flex; flex-direction: column; gap: 1.8rem; }
+    .contact-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .contact-item-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+    }
+    .contact-item-label {
+      font-size: .7rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: .2rem;
+    }
+    .contact-item-value { font-size: .9rem; color: var(--white); }
+    .contact-item-value a { color: var(--white); text-decoration: none; }
+    .contact-item-value a:hover { color: rgba(255,255,255,.6); }
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { display: flex; flex-direction: column; gap: .4rem; }
+    .form-field label {
+      font-size: .7rem; letter-spacing: .15em; text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+    }
+    .form-field input, .form-field textarea, .form-field select {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      color: var(--white);
+      padding: .8rem 1rem;
+      font-family: var(--sans); font-size: .85rem;
+      border-radius: 2px;
+      outline: none;
+      transition: border-color .3s;
+    }
+    .form-field input::placeholder, .form-field textarea::placeholder { color: rgba(255,255,255,.2); }
+    .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+      border-color: rgba(255,255,255,.4);
+    }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+    .form-field select option { background: #111; }
+    .btn-submit {
+      background: var(--white);
+      color: var(--dark);
+      border: none; cursor: pointer;
+      padding: .95rem 2rem;
+      font-family: var(--sans);
+      font-size: .8rem;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background .3s, transform .2s;
+      align-self: flex-start;
+    }
+    .btn-submit:hover { background: var(--gray); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #050505;
+      padding: 3.5rem 5% 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-brand-name {
+      font-family: var(--serif);
+      font-size: 2rem; font-weight: 300;
+      color: var(--white); letter-spacing: .1em;
+      margin-bottom: .6rem;
+    }
+    .footer-brand-tagline {
+      font-size: .78rem; color: rgba(255,255,255,.3);
+      letter-spacing: .08em; margin-bottom: 1.5rem;
+    }
+    .footer-social { display: flex; gap: .8rem; }
+    .footer-social a {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,.4); text-decoration: none; font-size: .8rem;
+      transition: border-color .3s, color .3s;
+    }
+    .footer-social a:hover { border-color: rgba(255,255,255,.5); color: var(--white); }
+    .footer-col-title {
+      font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(255,255,255,.35); margin-bottom: 1.2rem;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: .65rem; }
+    .footer-links a {
+      color: rgba(255,255,255,.35); text-decoration: none;
+      font-size: .82rem; transition: color .3s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,.75); }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 1.8rem; flex-wrap: wrap; gap: .5rem;
+    }
+    .footer-copy { font-size: .73rem; color: rgba(255,255,255,.2); }
+    .footer-ig-link {
+      font-size: .73rem; color: rgba(255,255,255,.35); text-decoration: none;
+      letter-spacing: .05em;
+      transition: color .3s;
+    }
+    .footer-ig-link:hover { color: rgba(255,255,255,.7); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .about-grid,
+      .experience-inner,
+      .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-img-accent { right: -1rem; }
+      .exp-visual { display: none; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-item:nth-child(n) { grid-column: auto; }
+      .gallery-item:nth-child(1) { grid-column: 1 / 3; }
+      .gallery-item:nth-child(5) { grid-column: 1 / 3; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 1rem 5%; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      section { padding: 5rem 5%; }
+      .booking-form { flex-direction: column; padding: 1rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .btn-submit { width: 100%; text-align: center; }
+      .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .strip { gap: 1.2rem; flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">AURA</a>
+  <ul class="nav-links">
+    <li><a href="#about">Nosotros</a></li>
+    <li><a href="#services">Servicios</a></li>
+    <li><a href="#gallery">Galería</a></li>
+    <li><a href="#contact">Contacto</a></li>
+    <li><a href="#booking" class="nav-cta">Reservar</a></li>
+  </ul>
+  <div class="nav-hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Salón de Belleza · Santiago, Chile</span>
+    <h1 class="hero-title">Tu <em>aura</em><br>comienza aquí</h1>
+    <p class="hero-sub">Un espacio íntimo dedicado a realzar tu belleza natural. Cortes, color, tratamientos y más — con atención personalizada.</p>
+    <div class="hero-actions">
+      <a href="#booking" class="btn-primary">Reservar hora</a>
+      <a href="#services" class="btn-outline">Ver servicios</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    <span>Descubrir</span>
+  </div>
+</section>
+
+<!-- STRIP -->
+<div class="strip">
+  <span class="strip-item">✦ Corte &amp; Color</span>
+  <span class="strip-item">✦ Tratamientos capilares</span>
+  <span class="strip-item">✦ Manicure &amp; Pedicure</span>
+  <span class="strip-item">✦ Maquillaje profesional</span>
+  <span class="strip-item">✦ Agenda en línea</span>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-img-main"></div>
+      <div class="about-img-accent">
+        <span class="about-stat">8+</span>
+        <span class="about-stat-label">Años de experiencia</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <div class="section-label">Nuestra historia</div>
+      <h2 class="section-title">Un salón <em>diferente</em></h2>
+      <p class="section-body">
+        En Aura Salón creemos que la belleza auténtica nace de la confianza y el cuidado. Nuestro equipo de especialistas trabaja con técnicas de vanguardia y productos de primer nivel para ofrecerte una experiencia única — donde cada visita se siente como un ritual de bienestar.
+      </p>
+      <div class="about-values">
+        <div class="about-value">
+          <div class="about-value-icon">✦</div>
+          <div>
+            <div class="about-value-name">Atención personalizada</div>
+            <div class="about-value-desc">Escuchamos tus necesidades antes de cada servicio para garantizar resultados que superen tus expectativas.</div>
+          </div>
+        </div>
+        <div class="about-value">
+          <div class="about-value-icon">◇</div>
+          <div>
+            <div class="about-value-name">Productos de calidad</div>
+            <div class="about-value-desc">Trabajamos con marcas líderes del mundo de la peluquería y estética profesional.</div>
+          </div>
+        </div>
+        <div class="about-value">
+          <div class="about-value-icon">○</div>
+          <div>
+            <div class="about-value-name">Ambiente acogedor</div>
+            <div class="about-value-desc">Un espacio donde te sentirás cómoda y en confianza desde el primer momento.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div class="section-label">Lo que ofrecemos</div>
+    <h2 class="section-title">Nuestros <em>servicios</em></h2>
+    <p class="section-body">Desde un corte de autor hasta una transformación completa de color — encontrarás todo lo que necesitas en un solo lugar.</p>
+  </div>
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <span class="service-icon">✂</span>
+      <h3 class="service-name">Corte &amp; Peinado</h3>
+      <p class="service-desc">Cortes a medida que resaltan tu estilo y se adaptan perfectamente a tu tipo de cabello.</p>
+      <ul class="service-items">
+        <li>Corte de autor mujer</li>
+        <li>Corte de caballero</li>
+        <li>Blow dry &amp; styling</li>
+        <li>Peinado para eventos</li>
+        <li>Corte infantil</li>
+      </ul>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">◉</span>
+      <h3 class="service-name">Color &amp; Mechas</h3>
+      <p class="service-desc">Técnicas modernas de coloración para lograr el tono y la luminosidad que siempre quisiste.</p>
+      <ul class="service-items">
+        <li>Tinte global</li>
+        <li>Balayage &amp; babylights</li>
+        <li>Mechas californianas</li>
+        <li>Coloración fantasía</li>
+        <li>Corrección de color</li>
+      </ul>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">❋</span>
+      <h3 class="service-name">Tratamientos</h3>
+      <p class="service-desc">Recupera la salud y el brillo de tu cabello con nuestros tratamientos reparadores e hidratantes.</p>
+      <ul class="service-items">
+        <li>Keratina &amp; alisado</li>
+        <li>Hidratación profunda</li>
+        <li>Nanoplastia capilar</li>
+        <li>Botox capilar</li>
+        <li>Tratamiento anticaída</li>
+      </ul>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">◌</span>
+      <h3 class="service-name">Manicure &amp; Pedicure</h3>
+      <p class="service-desc">Cuida tus manos y pies con una amplia variedad de técnicas y acabados de tendencia.</p>
+      <ul class="service-items">
+        <li>Manicure semipermanente</li>
+        <li>Pedicure semipermanente</li>
+        <li>Uñas acrílicas</li>
+        <li>Nail art &amp; diseños</li>
+        <li>Manicure clásica</li>
+      </ul>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">✧</span>
+      <h3 class="service-name">Cejas &amp; Pestañas</h3>
+      <p class="service-desc">Perfilamos y definimos tu mirada con técnicas profesionales y duraderas.</p>
+      <ul class="service-items">
+        <li>Diseño de cejas</li>
+        <li>Tintado de cejas</li>
+        <li>Laminado de cejas</li>
+        <li>Lifting de pestañas</li>
+        <li>Extensión de pestañas</li>
+      </ul>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">◈</span>
+      <h3 class="service-name">Maquillaje</h3>
+      <p class="service-desc">Realzamos tu belleza natural para cualquier ocasión, desde el día a día hasta grandes eventos.</p>
+      <ul class="service-items">
+        <li>Maquillaje social</li>
+        <li>Maquillaje de novia</li>
+        <li>Maquillaje artístico</li>
+        <li>Clases de maquillaje</li>
+        <li>Asesoría de imagen</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="experience-inner">
+    <div class="reveal">
+      <div class="section-label">La experiencia Aura</div>
+      <h2 class="section-title">Más que un <em>salón</em></h2>
+      <p class="section-body">Nos comprometemos a entregarte un momento de desconexión y bienestar en cada visita.</p>
+      <div class="exp-features">
+        <div class="exp-feature">
+          <span class="exp-num">01</span>
+          <div>
+            <div class="exp-feature-title">Reserva fácil y rápida</div>
+            <div class="exp-feature-desc">Agenda tu hora en minutos por WhatsApp, Instagram o directamente en nuestra web.</div>
+          </div>
+        </div>
+        <div class="exp-feature">
+          <span class="exp-num">02</span>
+          <div>
+            <div class="exp-feature-title">Profesionales especializados</div>
+            <div class="exp-feature-desc">Nuestro equipo se actualiza constantemente con las últimas tendencias y técnicas.</div>
+          </div>
+        </div>
+        <div class="exp-feature">
+          <span class="exp-num">03</span>
+          <div>
+            <div class="exp-feature-title">Resultados garantizados</div>
+            <div class="exp-feature-desc">Tu satisfacción es nuestra prioridad. Si algo no es lo que esperabas, lo resolvemos.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="exp-visual reveal">
+      <div class="exp-block">
+        <span class="exp-block-label">Ambiente exclusivo</span>
+      </div>
+      <div class="exp-block">
+        <span class="exp-block-label">Tendencias</span>
+      </div>
+      <div class="exp-block">
+        <span class="exp-block-label">Bienestar</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header reveal">
+    <div class="section-label">Nuestro trabajo</div>
+    <h2 class="section-title">Un vistazo a <em>Aura</em></h2>
+    <p class="section-body">Síguenos en Instagram para ver los resultados más recientes de nuestro equipo.</p>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a7f75" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Corte &amp; Balayage</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a7f75" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Color &amp; Mechas</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a7f75" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Peinado evento</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a7f75" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Manicure</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Keratina</span>
+      </div>
+    </div>
+    <div class="gallery-item">
+      <div class="gallery-placeholder">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a7f75" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span>Cejas &amp; Pestañas</span>
+      </div>
+    </div>
+  </div>
+  <div class="gallery-ig reveal">
+    <a href="https://www.instagram.com/aura.salon.cl/" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      @aura.salon.cl — Ver más en Instagram
+    </a>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="booking-inner reveal">
+    <div class="section-label">Agenda tu hora</div>
+    <h2 class="section-title">Reserva <em>online</em></h2>
+    <p class="section-body">Ingresa tu correo y te enviamos disponibilidad de horarios o contáctanos directamente por WhatsApp o Instagram.</p>
+    <form class="booking-form" onsubmit="handleBooking(event)">
+      <input type="email" placeholder="Tu correo electrónico" required />
+      <button type="submit">Solicitar hora</button>
+    </form>
+    <p class="booking-note">Te responderemos a la brevedad para confirmar tu reserva.</p>
+    <div class="booking-or">o contáctanos por</div>
+    <div class="booking-channels">
+      <a href="https://wa.me/56900000000" target="_blank" rel="noopener" class="booking-channel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://www.instagram.com/aura.salon.cl/" target="_blank" rel="noopener" class="booking-channel">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="reveal">
+      <div class="section-label">Encuéntranos</div>
+      <h2 class="section-title">Visítanos en <em>Santiago</em></h2>
+      <p class="section-body">Estamos aquí para recibirte y hacer de cada visita una experiencia especial.</p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div>
+            <div class="contact-item-label">Dirección</div>
+            <div class="contact-item-value">Santiago, Chile<br><small style="opacity:.6;font-size:.8rem;">Consulta la dirección exacta por Instagram o WhatsApp</small></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🕐</div>
+          <div>
+            <div class="contact-item-label">Horario</div>
+            <div class="contact-item-value">Lunes a Viernes: 09:00 – 19:00<br>Sábado: 09:00 – 16:00</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📸</div>
+          <div>
+            <div class="contact-item-label">Instagram</div>
+            <div class="contact-item-value"><a href="https://www.instagram.com/aura.salon.cl/" target="_blank" rel="noopener">@aura.salon.cl</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">💬</div>
+          <div>
+            <div class="contact-item-label">WhatsApp</div>
+            <div class="contact-item-value"><a href="https://wa.me/56900000000">+56 9 XXXX XXXX</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <form class="contact-form" onsubmit="handleContact(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nombre</label>
+            <input type="text" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-field">
+            <label>Teléfono</label>
+            <input type="tel" placeholder="+56 9 XXXX XXXX" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label>Correo electrónico</label>
+          <input type="email" placeholder="hola@ejemplo.com" required />
+        </div>
+        <div class="form-field">
+          <label>Servicio de interés</label>
+          <select>
+            <option value="">Selecciona un servicio</option>
+            <option>Corte &amp; Peinado</option>
+            <option>Color &amp; Mechas</option>
+            <option>Tratamientos capilares</option>
+            <option>Manicure &amp; Pedicure</option>
+            <option>Cejas &amp; Pestañas</option>
+            <option>Maquillaje</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Mensaje (opcional)</label>
+          <textarea placeholder="Cuéntanos qué necesitas..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar mensaje</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand-name">AURA SALÓN</div>
+      <div class="footer-brand-tagline">Tu espacio de belleza en Santiago, Chile</div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/aura.salon.cl/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href="https://wa.me/56900000000" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Servicios</div>
+      <ul class="footer-links">
+        <li><a href="#services">Corte &amp; Peinado</a></li>
+        <li><a href="#services">Color &amp; Mechas</a></li>
+        <li><a href="#services">Tratamientos</a></li>
+        <li><a href="#services">Manicure &amp; Pedicure</a></li>
+        <li><a href="#services">Cejas &amp; Pestañas</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Salón</div>
+      <ul class="footer-links">
+        <li><a href="#about">Nosotros</a></li>
+        <li><a href="#gallery">Galería</a></li>
+        <li><a href="#experience">Experiencia</a></li>
+        <li><a href="#booking">Reservas</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Horario</div>
+      <ul class="footer-links">
+        <li><a href="#">Lunes – Viernes</a></li>
+        <li><a href="#" style="color:rgba(245,240,232,.25);pointer-events:none">09:00 – 19:00</a></li>
+        <li><a href="#">Sábado</a></li>
+        <li><a href="#" style="color:rgba(245,240,232,.25);pointer-events:none">09:00 – 16:00</a></li>
+        <li><a href="#" style="color:rgba(245,240,232,.25);pointer-events:none">Domingo cerrado</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Aura Salón. Todos los derechos reservados.</span>
+    <a href="https://www.instagram.com/aura.salon.cl/" target="_blank" rel="noopener" class="footer-ig-link">@aura.salon.cl</a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Stagger service cards
+  document.querySelectorAll('.service-card').forEach((card, i) => {
+    card.style.transitionDelay = `${i * 0.08}s`;
+  });
+
+  // Forms
+  function handleBooking(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '¡Listo! Te contactaremos pronto.';
+    btn.style.background = '#5a8a5a';
+    setTimeout(() => { btn.textContent = 'Solicitar hora'; btn.style.background = ''; e.target.reset(); }, 4000);
+  }
+  function handleContact(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = '¡Mensaje enviado!';
+    btn.style.background = '#5a8a5a';
+    setTimeout(() => { btn.textContent = 'Enviar mensaje'; btn.style.background = ''; e.target.reset(); }, 4000);
+  }
+
+  // Mobile menu (simple toggle)
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  hamburger.addEventListener('click', () => {
+    const open = navLinks.style.display === 'flex';
+    navLinks.style.display = open ? 'none' : 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '70px';
+    navLinks.style.left = '0'; navLinks.style.right = '0';
+    navLinks.style.background = 'rgba(255,255,255,.98)';
+    navLinks.style.padding = '1.5rem 5%';
+    navLinks.style.boxShadow = '0 8px 30px rgba(0,0,0,.12)';
+    if (!open) {
+      navLinks.querySelectorAll('a').forEach(a => { a.style.color = '#0a0a0a'; });
+    }
+  });
+</script>
+</body>
+</html>
